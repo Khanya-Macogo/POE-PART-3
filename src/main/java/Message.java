@@ -55,16 +55,38 @@ public class Message {
 
         JOptionPane.showMessageDialog(null, WELCOME_MESSAGE, "Welcome to QuickChat", JOptionPane.INFORMATION_MESSAGE);
 
-        System.out.println("Please define the maximum number of messages you wish to send: ");
         int maxMessagesLimit = 0;
-        try {
-            maxMessagesLimit = scanner.nextInt();
-            scanner.nextLine();
-        } catch (InputMismatchException e) {
-            System.err.println("Invalid input. Setting message limit to 5 by default.");
-            scanner.nextLine();
-            maxMessagesLimit = 5;
+        boolean validInput = false;
+
+        // --- UPDATED INPUT: Use JOptionPane for Max Message Limit ---
+        while (!validInput) {
+            String limitInput = JOptionPane.showInputDialog(
+                    null,
+                    "Please define the maximum number of messages you wish to send:",
+                    "Set Message Limit",
+                    JOptionPane.QUESTION_MESSAGE
+            );
+
+            if (limitInput == null) {
+                // User pressed Cancel or closed the dialog.
+                maxMessagesLimit = 5;
+                JOptionPane.showMessageDialog(null, "Input cancelled. Setting message limit to 5 by default.", "Default Limit Set", JOptionPane.WARNING_MESSAGE);
+                validInput = true;
+            } else {
+                try {
+                    int inputLimit = Integer.parseInt(limitInput.trim());
+                    if (inputLimit > 0) {
+                        maxMessagesLimit = inputLimit;
+                        validInput = true;
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Invalid input. Please enter a number greater than zero.", "Input Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(null, "Invalid input. Please enter a valid whole number.", "Input Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
         }
+        // ---------------------------------------------------------------------
 
         int choice = 0;
 
