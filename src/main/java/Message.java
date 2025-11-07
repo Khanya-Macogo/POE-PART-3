@@ -433,7 +433,6 @@ public class Message {
         firstWord = firstWord.replaceAll("[^a-zA-Z0-9]", "");
         lastWord = lastWord.replaceAll("[^a-zA-Z0-9]", "");
 
-        // Format: ID_PREFIX:COUNT:FIRSTWORDLASTWORD
         return String.format("%s:%s:%s%s",
                 idPrefix,
                 msgCount,
@@ -462,13 +461,13 @@ public class Message {
                 messageList.add(this);
                 return "SEND";
             case 1: // Disregard Message
-                disregardedMessages.add(this.messageText); // <--- Populates Requirement 1 list
+                disregardedMessages.add(this.messageText);
                 return "DISREGARD";
             case 2: // Store Message to send later (JSON)
                 storeMessage(this);
-                messageList.add(this); // Add to messageList so it appears in history/reports
+                messageList.add(this);
                 return "STORE";
-            default: // Dialogue closed or unexpected result
+            default:
                 disregardedMessages.add(this.messageText);
                 return "DISREGARD";
         }
@@ -504,7 +503,7 @@ public class Message {
         String jsonContent = String.format(
                 "{\n  \"MessageID\": \"%s\",\n  \"NumSent\": %d,\n  \"Recipient\": \"%s\",\n  \"Message\": \"%s\",\n  \"Hash\": \"%s\"\n}",
                 msg.messageID, msg.numMessagesSent, msg.recipient, msg.messageText.replace("\"", "\\\""), msg.messageHash
-        ); // Used .replace for basic JSON safety against embedded quotes
+        );
 
         try (FileWriter file = new FileWriter(fileName)) {
             file.write(jsonContent);

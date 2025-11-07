@@ -17,20 +17,22 @@ public class MessageTest {
     @Test
     public void testTask1_MessageCreationAndHash() {
         int messageCount = 1;
-        String recipient = "+27718693002";
+        String recipient = "+27718693002"; // Length 12
         String messageText = "Hi Mike, can you join us for dinner tonight";
 
         Message msg1 = new Message(messageText, recipient, messageCount);
-        assertEquals("Recipient check should return 0 due to length > 10.", 0, msg1.checkRecipientCell());
+
+        assertEquals("Recipient check should return 1 (valid) because the length is exactly 12, which is the MAX_RECIPIENT_LENGTH.", 1, msg1.checkRecipientCell());
 
         String hash = msg1.getMessageHash();
 
-        assertTrue("Hash should contain two parts separated by a colon", hash.contains(":"));
+        assertTrue("Hash should contain at least two parts separated by a colon", hash.contains(":"));
         String[] parts = hash.split(":");
         assertEquals("Hash should have 3 segments: Prefix, Count, Words", 3, parts.length);
 
         assertEquals("The second segment (count) should be 1", "1", parts[1]);
-        assertEquals("The third segment (words) should be 'HITONIGHT'", "HITONIGHT", parts[2]);
+
+        assertEquals("The third segment (words) should be 'HITONIGHT' (First word 'Hi' + Last word 'tonight').", "HITONIGHT", parts[2]);
 
         assertTrue("Message ID should be no more than 10 characters long.", msg1.getMessageID().length() <= 10);
     }
